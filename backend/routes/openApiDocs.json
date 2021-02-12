@@ -1,0 +1,302 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "XMeme API",
+      "description": "An API Documentation for XMeme, a project as a part of Crio Winter Of Doing Stage 2B",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+        "name": "Atharv Daflapurkar",
+        "email": "atharvcd@gmail.com",
+        "url": "http://localhost:3000/"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8081"
+      }
+    ],
+    "paths": {
+      "/memes": {
+        "get": {
+          "tags": [
+            "memes"
+           ],
+          "description": "Returns the latest 100 Memes based on their time creation",
+          "operationId": "getMemes",
+          "responses": {
+            "200": {
+              "description": "Successfully fetched latest 100 memes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/MemeResponse"
+                    }
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+           "tags": [
+            "memes"
+           ],
+          "description": "Creates a new Meme. Duplicates Memes are not allowed",
+          "operationId": "createMeme",
+          "requestBody": {
+            "description": "Meme to add to the Meme Stream",
+            "required": true,
+            "content": {
+              "application/json": {
+                "required": true,
+                "schema": {
+                  "$ref": "#/components/schemas/Meme"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Meme Id response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Id"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/memes/{id}": {
+        "get": {
+        "tags": [
+            "memes"
+          ],
+          "description": "Returns a Meme based on a single meme ID",
+          "operationId": "getMeme",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of Meme to fetch",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Meme response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MemeResponse"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+            "tags": [
+                "memes"
+              ],
+              "description": "Updates a Meme based on a single meme ID and return its ID",
+              "operationId": "updateMeme",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "description": "ID of Meme to fetch",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "description": "Updated Meme data",
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "required": true,
+                    "schema": {
+                      "$ref": "#/components/schemas/RequestMemeUpdate"
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Meme response",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/MemeResponse"
+                      }
+                    }
+                  }
+                },
+                "default": {
+                  "description": "unexpected error",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Error"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+        "delete": {
+         "tags": [
+            "memes"
+          ],
+          "description": "deletes a single Meme based on the meme ID provided",
+          "operationId": "removeMeme",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of Meme to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Successfully deleted the Meme."
+            },
+            "default": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Id": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+        },
+        "MemeResponse": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Meme"
+            },
+            {
+              "$ref": "#/components/schemas/Id"
+            }
+          ]
+        },
+        "Meme": {
+          "type": "object",
+          "required": [
+            "name",
+            "url",
+            "caption"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url" : {
+                "type": "string"
+            },
+            "caption": {
+              "type": "string"
+            }
+          }
+        },
+        "RequestMemeUpdate": {
+            "type": "object",
+            "required": [
+              "url",
+              "caption"
+            ],
+            "properties": {
+              "url" : {
+                  "type": "string"
+              },
+              "caption": {
+                "type": "string"
+              }
+            }
+        },
+        "Error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+           ],
+           "properties": {
+             "code": {
+             "type": "integer",
+              "format": "int32"
+             },
+             "message": {
+               "type": "string"
+              }
+            } 
+        }
+      }
+    }
+  }
