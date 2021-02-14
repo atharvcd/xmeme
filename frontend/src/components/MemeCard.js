@@ -13,6 +13,7 @@ import UpdateMeme from "../components/UpdateMeme";
 import DeleteMeme from "../components/DeleteMeme";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { incrLikes } from "../api/memesApi";
+import avatarUrl from "../assets/avatarUrl.jpg";
 
 const useStyles = makeStyles({
   card: {
@@ -51,7 +52,7 @@ const WhiteTextTypography = withStyles({
 })(Typography);
 const MemeCard = props => {
   const classes = useStyles();
-  const { avatarUrl, name, caption, url, id, likes} = props.memeData;
+  const { name, caption, url, id, likes} = props.memeData;
   const {updated, handleUpdatedStatus, deleted, handleDeletedStatus} = props.statusOptions;
   const [memeLikes,setMemeLikes] = useState(likes);
   const likeMeme = () => {
@@ -71,11 +72,6 @@ const MemeCard = props => {
           title : classes.title
         }}
         avatar={<Avatar src={avatarUrl} />}
-        action={
-          <IconButton aria-label="settings">
-            <ShareIcon style = {{color : "#ffffff"}}/>
-          </IconButton>
-        }
         title={name}
       />
       <CardMedia className={classes.media} image={url} />

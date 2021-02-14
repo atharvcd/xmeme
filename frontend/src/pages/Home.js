@@ -7,6 +7,7 @@ import MemerList from "../components/MemerList";
 import TrendingMemes from "../components/TrendingMemes";
 import "../styles.css";
 import { getMemesData } from '../api/memesApi';
+
 const Home = () => {
   const [recentMemes, setRecentMemes] = useState([]);
   const [memeCreated, setMemeCreated] = useState(false);
@@ -32,7 +33,6 @@ const Home = () => {
     getMemesData().then(data => {
         data.forEach((item,indx) => {
           data[indx].index = indx+1;
-          data[indx].avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/e/e0/Keurig_Logo.png";
         })
         setRecentMemes(data);
 
@@ -55,10 +55,10 @@ const Home = () => {
           <p style = {{fontFamily : "Sofia", color : "#ffffff", fontSize : "3vw"}}>Top 10 Trending Memes</p>
          </div>
          <div style = {{display : "flex", margin : "0 auto", padding : "2%", backgroundColor : "#1f1f1f"}}>
-          <div style = {{width : "25%"}}><TrendingMemes/></div>
-          <div style = {{width : "25%"}}><TrendingMemes/></div>
-          <div style = {{width : "25%"}}><TrendingMemes/></div>
-          <div style = {{width : "25%"}}><TrendingMemes/></div>
+          <div style = {{width : "25%"}}><TrendingMemes memeList = {recentMemes}/></div>
+          <div style = {{width : "25%"}}><TrendingMemes memeList = {recentMemes}/></div>
+          <div style = {{width : "25%"}}><TrendingMemes memeList = {recentMemes}/></div>
+          <div style = {{width : "25%"}}><TrendingMemes memeList = {recentMemes}/></div>
         </div>
       </div>
       <div className = "col-md-8" style = {{float : "left", padding : "0 2% 0 0%", border : "1px solid red"}}>
@@ -80,7 +80,7 @@ const Home = () => {
       <div className = "col-md-4" style = {{textAlign : "right", width : "100%",border : "1px solid red", height : "100%", padding : "0.5%"}}>
         <div style = {{textAlign : "left",fontSize : "3vw", fontFamily : "Sofia", color : "#ffffff", border : "1px solid black", margin : "1.5% 1%"}}>Trending Creators</div>
         <div className="scrollbar scrollbar-primary  mt-4 mx-auto" style = {{backgroundColor : "#2c2c2c", opacity : "1" ,border : "1px solid red", height : "92vh", overflowY : "scroll", overflowX : "hidden", padding : "5% 5%"}}>
-          <MemerList/>
+          <MemerList memeList = {recentMemes}/>
         </div>
       </div>
     </div>

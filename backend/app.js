@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const express = require("express");
 //const openApiDocsRouter = require("./routes/openApiDocs");
 const swaggerOptions = require("./routes/openApiDocs.json");
+const config = require('./config.js');
+
+console.log(`NODE_ENV = ${config.NODE_ENV}`);
 
 const app = express();
 const swaggerApp = express();
@@ -16,10 +19,10 @@ const swaggerUI = require("swagger-ui-express");
 //Import necessary Routes
 const memeRoutes = require("./routes/meme");
 
-//PORT
-const port = process.env.PORT || 8081;
-const swagger_port = process.env.SWAGGER_PORT || 8080;
-
+//HOST and PORT
+const port = config.PORT || 8081;
+const swagger_port = config.SWAGGER_PORT || 8080;
+const host = config.HOST;
 //Swagger Specification
 const options = {
   definition: {
@@ -36,15 +39,19 @@ const options = {
 //const specs = swaggerJsDoc(options); 
 
 //DB Connection
+console.log(config.DATABASE);
 mongoose
-  .connect(process.env.DATABASE, {
+  .connect(config.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
   })
   .then(() => {
     console.log("DB CONNECTED");
-  });
+  })
+  .catch(() => {
+    console.log('DB Error');
+  })
 
 //Middlewares
 app.use(bodyParser.json());
@@ -61,7 +68,7 @@ app.get('/', (req, res) => {
   })
 
 //Starting a server
-app.listen(port, () => {
+app.listen(port,host,() => {
   console.log(`app is running at ${port}`);
 });
 swaggerApp.listen(swagger_port, () => {
